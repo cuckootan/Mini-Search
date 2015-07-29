@@ -1,4 +1,4 @@
-text_search
+TextSearch
 ===========
 
 文本查询服务
