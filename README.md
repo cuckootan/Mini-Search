@@ -41,6 +41,14 @@ A mini search engine based on Echo\-Server, a non\-blocking network library in C
 
 生成的可执行文件在 **${PROJECT_DIR}/bin** 中。
 
+## 4 测试
+
+-   首先设定好服务端的端口号，然后启动服务端。
+-   然后在客户端上运行 **telnet** 命令进行测试：
+
+    `telnet SERVER_IP SERVER_PORT`
+-   输入一个英文单词，随即会返回与这个词最相似的多个候选词。
+
 
 
   [1]: https://github.com/cuckootan/Echo-Server
