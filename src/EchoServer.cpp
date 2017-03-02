@@ -1,6 +1,7 @@
 #include "EchoServer.h"
 #include <iostream>
 #include <string>
+#include <ctype.h>
 
 using namespace std;
 using namespace placeholders;
@@ -14,21 +15,12 @@ EchoServer::EchoServer(const InetAddress &addr, const string& text_name, const s
     server_.setConnection(bind(&EchoServer::onConnection, this, _1));
     server_.setMessage(bind(&EchoServer::onMessage, this, _1));
     server_.setClose(bind(&EchoServer::onClose, this, _1));
-    
-    timer_thread_.setTimer(3, 3);
-    timer_thread_.setTimerCallback(bind(&Cache::write_to_file, &cache_));
 }
 
 void EchoServer::start()
 {
     pool_.start();
-    timer_thread_.startTimerThread();
     server_.start();
-}
-
-EchoServer::~EchoServer()
-{
-    timer_thread_.cancelTimerThread();
 }
 
 void EchoServer::onConnection(const TcpConnectionPtr &conn)
@@ -87,7 +79,7 @@ void EchoServer::compute(const std::string &word, const TcpConnectionPtr &conn)
     cout << "size : " << cache_.list_size() << endl;
     cout << "list : " << endl;
     cache_.list_show();
-//    cache_.write_to_file();
+    cache_.write_to_file();
     cout << "-----------" << endl;
 }
 

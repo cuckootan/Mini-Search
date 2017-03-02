@@ -1,15 +1,36 @@
-.PHONY:clean run
 CC=g++
-CFLAGS=-Wall
-BIN=./bin/main
-INCLUDE=-I./include
-LIB=-L./lib
-OBJS=./obj/Words.o ./obj/Text.o ./obj/Cache.o ./obj/Timer.o ./obj/TimerThread.o ./obj/EchoServer.o ./obj/main.o
+
+SOURCES_DIR=./src
+INCLUDES_DIR=./include
+OBJS_DIR=./obj
+BIN_DIR=./bin
+
+CFLAGS=-I$(INCLUDES_DIR) -c -Wall -std=c++0x
+LDFLAGS=-lecho -lpthread
+
+
+
+SOURCES=$(wildcard $(SOURCES_DIR)/*.cc)
+
+NOTDIR=$(notdir $(SOURCES))
+SUBST=$(patsubst %.cc, %.o, $(NOTDIR))
+OBJS=$(addprefix $(OBJS_DIR)/, $(SUBST))
+
+BIN=$(BIN_DIR)/main
+
+
+
 $(BIN):$(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ -lpthread $(LIB) -lecho
-./obj/%.o:./src/%.cpp
-	$(CC) $(CFLAGS) -c $^ -o $@ $(INCLUDE) -std=c++0x
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+$(OBJS_DIR)/%.o:$(SOURCES_DIR)/%.cc
+	$(CC) -o $@ $< $(CFLAGS)
+
+
+
+.PHONY:clean run
 clean:
-	rm -f ./obj/*.o $(BIN)
+	rm -f $(OBJS_DIR)/*
+	rm -f $(BIN_DIR)/*
 run:
 	$(BIN)

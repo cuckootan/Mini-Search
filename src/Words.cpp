@@ -48,37 +48,24 @@ void Words::read_word_freq(const string& word)
         cout << word_freq_[word] << endl;
 }
 
-int Words::min_edit_instance(const string& src, const string& des)
+
+int Words::min_edit_instance(const string &src, const string &des, int i, int j)
 {
-    size_t len1 = src.size();
-    size_t len2 = des.size();
-    size_t i, j;
-    int seq[50][50];
-    memset(seq, -1, sizeof seq);
+    if(i == 0)
+        return j;
 
-    for(i = 0; i != len1 + 1; i++)
-    {
-        for(j = 0; j != len2 + 1; j++)
-        {
-            if(i == 0)
-            {
-                seq[i][j] = j;
-                continue;
-            }
-            else if(j == 0)
-            {
-                seq[i][j] = i;
-                continue;
-            }
+    if(j == 0)
+        return i;
 
-            if(src[i - 1] == des[j - 1])
-                seq[i][j] = seq[i - 1][j - 1];
-            else
-                seq[i][j] = min_cost(seq[i - 1][j] + 1, seq[i][j - 1] + 1, seq[i - 1][j - 1] + 1);
-        }
-    }
-
-    return seq[len1][len2];
+    if(src[i - 1] == des[j - 1]) 
+        return min_edit_instance(src, des, i - 1, j - 1); 
+    else
+    {   
+        int insert_cost = min_edit_instance(src, des, i - 1, j) + 1;
+        int delete_cost = min_edit_instance(src, des, i, j - 1) + 1;
+        int replace_cost = min_edit_instance(src, des, i - 1, j - 1) + 1;
+        return min_cost(insert_cost, delete_cost, replace_cost);
+    }   
 }
 
 void Words::priority_queue_init(const string& word)
@@ -90,16 +77,11 @@ void Words::priority_queue_init(const string& word)
         it_ != candidate_words_.end();
         it_++)
     {   
-	if(abs(it_->size() - word.size()) > MAX_EDIT_INSTANCE)
-	    continue;
-
-	int dist = min_edit_instance(word, *it_);
-	if(dist > MAX_EDIT_INSTANCE)
-	    continue;
-
         Word_info temp;
         temp.set_word_name(*it_);
-        temp.set_word_cost(dist);
+        temp.set_word_cost(min_edit_instance(word, *it_, word.size(), it_->size()));
+        if(temp.word_cost_ > MAX_EDIT_INSTANCE)
+            continue;
         temp.set_word_freq(word_freq_[*it_]);
         que_.push(temp);
     }
