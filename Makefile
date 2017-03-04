@@ -30,7 +30,7 @@ $(OBJS_DIR)/%.o:$(SOURCES_DIR)/%.cc
 
 .PHONY:clean run
 clean:
-	rm -f $(OBJS_DIR)/*
-	rm -f $(BIN_DIR)/*
+	rm -f $(OBJS)
+	rm -f $(BIN)
 run:
 	$(BIN)

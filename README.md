@@ -23,7 +23,9 @@ A mini search engine based on Echo\-Server, a non\-blocking network library in C
 
 ## 3 编译
 
-首先执行如下命令将项目下载到本地：
+首先安装好 Echo\-Server。
+
+然后执行如下命令将项目下载到本地：
 
 `git clone https://github.com/cuckootan/Mini-Search`
 
